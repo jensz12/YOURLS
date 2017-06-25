@@ -143,16 +143,19 @@ if( yourls_do_log_redirect() ) {
 	// Get $list_of_days, $list_of_months, $list_of_years
 	reset( $dates );
 	if( $dates ) {
-		extract( yourls_build_list_of_days( $dates ) );
+        $_lists = yourls_build_list_of_days( $dates );
+        $list_of_days   = $_lists['list_of_days'];
+        $list_of_months = $_lists['list_of_months'];
+        $list_of_years  = $_lists['list_of_years'];
+        unset($_lists);
 	}
 
-	
 	// *** Last 24 hours : array of $last_24h[ $hour ] = number of click ***
 	$query = "SELECT
 		DATE_FORMAT(DATE_ADD(`click_time`, INTERVAL " . YOURLS_HOURS_OFFSET . " HOUR), '%H %p') AS `time`,
 		COUNT(*) AS `count`
 	FROM `$table`
-	WHERE `shorturl` $keyword_range AND DATE_ADD(`click_time`, INTERVAL " . YOURLS_HOURS_OFFSET . " HOUR) > (CURRENT_TIMESTAMP - INTERVAL 1 DAY)
+	WHERE `shorturl` $keyword_range AND DATE_ADD(`click_time`, INTERVAL " . YOURLS_HOURS_OFFSET . " HOUR) > (DATE_ADD(CURRENT_TIMESTAMP, INTERVAL " . YOURLS_HOURS_OFFSET . " HOUR) - INTERVAL 1 DAY)
 	GROUP BY `time`;";
 	$rows = $ydb->get_results( yourls_apply_filter( 'stat_query_last24h', $query ) );
 	

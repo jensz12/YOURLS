@@ -224,18 +224,15 @@ function yourls_http_request( $type, $url, $headers, $data, $options ) {
 }
 
 /**
- * Check if Requests class is defined, include Requests library if need be
+ * Include Requests library if need be
  *
- * All HTTP functions should perform that check prior to any operation. This is to avoid
- * include()-ing all the Requests files on every YOURLS instance disregarding whether needed or not.
+ * This is to avoid include()-ing all the Requests files on every YOURLS instance
+ * disregarding whether needed or not.
  *
  * @since 1.7
  */
 function yourls_http_load_library() {
-	if ( !class_exists( 'Requests', false ) ) {
-		require_once dirname( __FILE__ ) . '/Requests/Requests.php';
-		Requests::register_autoloader();
-	}
+    Requests::register_autoloader();
 }
 
 /**
@@ -296,7 +293,7 @@ function yourls_check_core_version() {
 		'failed_attempts'    => $checks->failed_attempts,
 		'yourls_site'        => defined( 'YOURLS_SITE' ) ? YOURLS_SITE : 'unknown',
 		'yourls_version'     => defined( 'YOURLS_VERSION' ) ? YOURLS_VERSION : 'unknown',
-		'php_version'        => phpversion(),
+		'php_version'        => PHP_VERSION,
 		'mysql_version'      => $ydb->mysql_version(),
 		'locale'             => yourls_get_locale(),
 
